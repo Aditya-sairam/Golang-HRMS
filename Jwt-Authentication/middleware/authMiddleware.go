@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/Aditya-sairam/golang-jwt-project/helpers"
+	"github.com/Aditya-sairam/golang-jwt-project/Jwt-Authentication/helpers"
 	"github.com/gin-gonic/gin"
 )
 
