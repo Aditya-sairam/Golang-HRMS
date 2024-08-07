@@ -171,7 +171,7 @@ func GetUsers() gin.HandlerFunc {
 		groupStage := bson.D{{"$group", bson.D{
 			{"_id", bson.D{{"_id", "null"}}},
 			{"total_count", bson.D{{"$sum", 1}}},
-			{"data", bson.D{{"$push", "$$Root"}}}}}}
+			{"data", bson.D{{"$push", "$$ROOT"}}}}}}
 
 		projectStage := bson.D{
 			{"$project", bson.D{

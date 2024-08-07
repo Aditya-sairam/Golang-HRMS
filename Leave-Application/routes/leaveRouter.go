@@ -8,6 +8,7 @@ import (
 
 func LeaveAppRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.Use(middleware.Authenticate())
-	incomingRoutes.GET("/leave_request/", controller.LeaveRequest())
+	incomingRoutes.POST("/leave_request", controller.LeaveRequest())
+	incomingRoutes.GET("/leave_list", controller.LeaveList())
 
 }

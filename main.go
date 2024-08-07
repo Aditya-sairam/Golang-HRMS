@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/Aditya-sairam/golang-jwt-project/Jwt-Authentication/routes"
@@ -21,6 +22,9 @@ func main() {
 	routes.UserRoutes(router)
 
 	leaveRoutes.LeaveAppRoutes(router)
+	for _, route := range router.Routes() {
+		fmt.Println(route.Method, route.Path)
+	}
 	//leav
 	router.GET("/api-1", func(c *gin.Context) {
 		c.JSON(200, gin.H{"success": "Access granted for api-1"})
