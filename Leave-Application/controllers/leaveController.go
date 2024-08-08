@@ -116,3 +116,36 @@ func LeaveList() gin.HandlerFunc {
 		c.JSON(http.StatusOK, allUsers[0])
 	}
 }
+
+func LeaveApproval() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		leaveId := c.Param("leave_id")
+		var leave models.LeaveRequest
+
+		err := helpers.CheckUserType(c, "ADMIN")
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "This page can only be accessed by admins!"})
+		}
+
+		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
+		err = leaveCollection.FindOne(ctx, bson.M{"user_id": leaveId}).Decode(&leave)
+		defer cancel()
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"Error": err})
+		}
+
+		status := "Approved"
+		// if status != "Approved" || status != "Denied" {
+		// 	c.JSON(http.StatusBadRequest, gin.H{"Error": "you can either approve or deny"})
+		// 	return
+		// }
+		update := bson.M{"$set": bson.M{"status": status}}
+		_, err = leaveCollection.UpdateOne(ctx, bson.M{"leavetypeid": leaveId}, update)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"Error": "Failed to update leave request"})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"Message": "Leave request status updated successfully"})
+
+	}
+}
