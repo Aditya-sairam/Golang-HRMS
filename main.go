@@ -6,6 +6,8 @@ import (
 
 	"github.com/Aditya-sairam/golang-jwt-project/Jwt-Authentication/routes"
 	leaveRoutes "github.com/Aditya-sairam/golang-jwt-project/Leave-Application/routes"
+
+	recruitmentRoutes "github.com/Aditya-sairam/golang-jwt-project/Recruitment/routes"
 	"github.com/gin-gonic/gin"
 )
 
@@ -22,6 +24,9 @@ func main() {
 	routes.UserRoutes(router)
 
 	leaveRoutes.LeaveAppRoutes(router)
+
+	recruitmentRoutes.JobRoutes(router)
+
 	for _, route := range router.Routes() {
 		fmt.Println(route.Method, route.Path)
 	}
