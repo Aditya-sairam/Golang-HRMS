@@ -8,6 +8,8 @@ import (
 
 func JobRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.Use(middleware.Authenticate())
-	incomingRoutes.POST("/job_posting", controller.CreateJobPosting())
+	incomingRoutes.POST("recruitment/job_posting", controller.CreateJobPosting())
+	incomingRoutes.GET("recruitment/job_list", controller.ListJobs())
+	incomingRoutes.GET("/recruitment/:job_id", controller.GetJob())
 
 }

@@ -18,4 +18,5 @@ type JobPosting struct {
 	Type                 string             `json:"type" validate:"required,oneof=Internal External"`
 	Department           string             `json:"department"`
 	Location             string             `json:"location"`
+	Job_Id               string             `json:"job_id"`
 }
