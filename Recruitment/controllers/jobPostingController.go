@@ -17,6 +17,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
+// Please add comments to all the file (Good coding practice)
 var validate = validator.New()
 var jobPostingCollection *mongo.Collection = databases.OpenCollection(databases.Client, "jobs")
 
