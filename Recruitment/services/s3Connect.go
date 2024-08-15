@@ -19,7 +19,7 @@ const (
 // UploadToS3 uploads a file to S3 and returns the file URL
 func UploadToS3(file *multipart.FileHeader, folder string) (string, error) {
 	// Load the AWS config
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("your-region"))
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion("us-east-2"))
 	if err != nil {
 		return "", fmt.Errorf("unable to load AWS SDK config, %v", err)
 	}
