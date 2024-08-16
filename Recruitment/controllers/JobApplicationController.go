@@ -1,3 +1,4 @@
+// Add the code logic to check if a job exists before letting the applicant apply
 package controllers
 
 import (
@@ -17,6 +18,7 @@ import (
 
 var JobApplicationCollection *mongo.Collection = databases.OpenCollection(databases.Client, "jobApplications")
 
+// var jobPosting
 func JobApplicationProcess() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		jobId := c.PostForm("job_id")
@@ -24,12 +26,12 @@ func JobApplicationProcess() gin.HandlerFunc {
 		phoneNumber := c.PostForm("phone_number")
 		email := c.PostForm("email")
 
-		objectId, err := primitive.ObjectIDFromHex(jobId)
-		if err != nil {
-			log.Printf("Invalid Job Id: %v", err)
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Job Id"})
-			return
-		}
+		//objectId, err := jobId.Hex()
+		// if err != nil {
+		// 	log.Printf("Invalid Job Id: %v", err)
+		// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Job Id"})
+		// 	return
+		// }
 
 		resumeFile, err := c.FormFile("resume")
 		if err != nil {
@@ -61,7 +63,7 @@ func JobApplicationProcess() gin.HandlerFunc {
 
 		jobApplication := models.JobApplication{
 			ID:             primitive.NewObjectID(),
-			JobID:          objectId,
+			JobID:          jobId,
 			ApplicantName:  applicantName,
 			Email:          email,
 			PhoneNumber:    phoneNumber,

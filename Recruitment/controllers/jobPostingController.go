@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net/http"
 	"strconv"
@@ -20,6 +21,7 @@ import (
 // Please add comments to all the file (Good coding practice)
 var validate = validator.New()
 var jobPostingCollection *mongo.Collection = databases.OpenCollection(databases.Client, "jobs")
+var jobApplications *mongo.Collection = databases.OpenCollection(databases.Client, "jobApplications")
 
 func CreateJobPosting() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -106,21 +108,50 @@ func ListJobs() gin.HandlerFunc {
 
 func GetJob() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		userId := c.Param("job_id")
+		jobId := c.Param("job_id")
 
-		err := helpers.MatchUserTypeToUid(c, userId)
+		err := helpers.CheckUserType(c, "ADMIN")
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 			return
 		}
 		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
-		var user models.JobPosting
-		err = jobPostingCollection.FindOne(ctx, bson.M{"job_id": userId}).Decode(&user)
+		var job models.JobPosting
+		err = jobPostingCollection.FindOne(ctx, bson.M{"job_id": jobId}).Decode(&job)
 		defer cancel()
 		if err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
-		c.JSON(http.StatusOK, user)
+		c.JSON(http.StatusOK, job)
+	}
+}
+
+func ListApplicants() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		jobId := c.Param("job_id")
+		err := helpers.CheckUserType(c, "ADMIN")
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"Error": "Unauthorized!"})
+			return
+		}
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+		//var job models.JobPosting
+		var applications []models.JobApplication
+
+		result, err := jobApplications.Find(ctx, bson.M{"jobid": jobId})
+		fmt.Println(result)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"Error": err})
+			return
+		}
+		defer cancel()
+		if err := result.All(ctx, &applications); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"Error": err})
+			return
+		}
+
+		c.JSON(http.StatusOK, applications)
+
 	}
 }

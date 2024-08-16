@@ -26,6 +26,7 @@ func main() {
 	leaveRoutes.LeaveAppRoutes(router)
 
 	recruitmentRoutes.JobRoutes(router)
+	recruitmentRoutes.JobAppRoutes(router)
 
 	for _, route := range router.Routes() {
 		fmt.Println(route.Method, route.Path)

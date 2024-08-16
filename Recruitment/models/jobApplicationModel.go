@@ -9,7 +9,7 @@ import (
 // JobApplication represents a user's application to a job
 type JobApplication struct {
 	ID             primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
-	JobID          primitive.ObjectID `bson:"job_id" json:"job_id"` // Reference to JobPosting
+	JobID          string             `json:"job_id"` // Reference to JobPosting
 	ApplicantName  string             `bson:"applicant_name" json:"applicant_name"`
 	Email          string             `bson:"email" json:"email"`
 	PhoneNumber    string             `bson:"phone_number" json:"phone_number"`

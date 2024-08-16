@@ -7,10 +7,15 @@ import (
 )
 
 func JobRoutes(incomingRoutes *gin.Engine) {
-	incomingRoutes.POST("recruitment/job_application", controller.JobApplicationProcess())
-	incomingRoutes.Use(middleware.Authenticate())
-	incomingRoutes.POST("recruitment/job_posting", controller.CreateJobPosting())
-	incomingRoutes.GET("recruitment/job_list", controller.ListJobs())
-	incomingRoutes.GET("/recruitment/:job_id", controller.GetJob())
+
+	authenticatedRoutes := incomingRoutes.Group("/recruitment")
+	authenticatedRoutes.Use(middleware.Authenticate())
+
+	authenticatedRoutes.GET("/:job_id/applicants_list", controller.ListApplicants())
+	// Routes that require authentication
+
+	authenticatedRoutes.POST("job_posting", controller.CreateJobPosting())
+	authenticatedRoutes.GET("job_list", controller.ListJobs())
+	authenticatedRoutes.GET("/:job_id", controller.GetJob())
 
 }
