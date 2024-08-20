@@ -20,6 +20,7 @@ import (
 
 // Please add comments to all the file (Good coding practice)
 // Make sure to add comments
+// Add the react component.
 var validate = validator.New()
 var jobPostingCollection *mongo.Collection = databases.OpenCollection(databases.Client, "jobs")
 var jobApplications *mongo.Collection = databases.OpenCollection(databases.Client, "jobApplications")
