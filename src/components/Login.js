@@ -1,18 +1,32 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './styling/signup.css'
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
+  const handleEmail = (e) => {
+    setEmail(e.target.value)
+  }
+
+  const handlePassword = (e) => {
+    setPassword(e.target.value)
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
       const response = await axios.post('http://localhost:9000/users/login', {
-        email,       // Changed from username to email
+        email,       
         password,
       });
+      const {token} = response.token
+      if(token){
+        localStorage.setItem('token',token)
+      }
       // Handle successful login (e.g., save token, redirect)
       console.log(response.data);
     } catch (error) {
@@ -23,15 +37,16 @@ const Login = () => {
 
   return (
     <div>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
+      
+      <form onSubmit={handleSubmit} className='form-container'>
+        <h2>Login</h2>
         <div>
           <label htmlFor="email">Email:</label>
           <input
             type="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmail}
             required
           />
         </div>
@@ -41,7 +56,7 @@ const Login = () => {
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handlePassword}
             required
           />
         </div>

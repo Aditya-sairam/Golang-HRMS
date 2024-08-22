@@ -7,14 +7,26 @@ const getAuthHeaers = () => {
     const token = localStorage.getItem('jwtToken');
     return {
         headers: {
-            Authorization : `Bearer ${token}`
+            'token' : `${token}`
         },
     };
 };
 
-export const featchLeaveList = () =>{
-    return axios.get(`${API_URL}/leave_list`,leaveData,getAuthHeaers())
-};
 
+export const getLeaveList = async () => {
+    try {
+        const token = localStorage.getItem('token');
+        console.log(`${token}`)
+        const response = await axios.get(`${API_URL}/leave_list`, {
+            headers: {
+                
+                'token': `${token}`
+            }
+        });
+        return response.data;
+    } catch (error) {
+        throw error;
+    }
+};
 
 
