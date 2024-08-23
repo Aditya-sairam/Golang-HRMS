@@ -9,6 +9,7 @@ import (
 
 	"github.com/Aditya-sairam/golang-jwt-project/Jwt-Authentication/databases"
 	"github.com/Aditya-sairam/golang-jwt-project/Jwt-Authentication/helpers"
+	userModels "github.com/Aditya-sairam/golang-jwt-project/Jwt-Authentication/models"
 	"github.com/Aditya-sairam/golang-jwt-project/Leave-Application/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -19,6 +20,7 @@ import (
 
 var leaveValidate = validator.New()
 var leaveCollection *mongo.Collection = databases.OpenCollection(databases.Client, "leaveApplication")
+var userCollection *mongo.Collection = databases.OpenCollection(databases.Client, "user")
 
 func LeaveRequest() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -56,9 +58,19 @@ func LeaveRequest() gin.HandlerFunc {
 		}
 
 		leaveRequest.UserId = uidStr
+		var user userModels.User
+
+		err := userCollection.FindOne(ctx, bson.M{"user_id": uidStr}).Decode(&user)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"Error": err})
+		}
+
 		leaveRequest.LeaveRequestID = primitive.NewObjectID()
 		leaveRequest.LeaveTypeID = leaveRequest.LeaveRequestID.Hex()
 
+		// assigning the user:
+		fullName := *user.First_name + " " + *user.Last_name
+		leaveRequest.Username = &fullName
 		resultInsertionNumber, insertErr := leaveCollection.InsertOne(ctx, leaveRequest)
 		if insertErr != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": insertErr.Error()})
@@ -117,35 +129,31 @@ func LeaveList() gin.HandlerFunc {
 	}
 }
 
-func LeaveApproval() gin.HandlerFunc {
+// Handling the request from reach side.
+type statusUpdateRequest struct {
+	Status string `json:"status"`
+}
+
+func UpdateLeaveStatus() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		leaveId := c.Param("leave_id")
-		var leave models.LeaveRequest
-
-		err := helpers.CheckUserType(c, "ADMIN")
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"Error": "This page can only be accessed by admins!"})
-		}
-
-		ctx, cancel := context.WithTimeout(context.Background(), 60*time.Second)
-		err = leaveCollection.FindOne(ctx, bson.M{"user_id": leaveId}).Decode(&leave)
-		defer cancel()
-		if err != nil {
+		leaveID := c.Param("id")
+		var req statusUpdateRequest
+		if err := c.ShouldBindJSON(&req); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"Error": err})
-		}
-
-		status := "Approved"
-		// if status != "Approved" || status != "Denied" {
-		// 	c.JSON(http.StatusBadRequest, gin.H{"Error": "you can either approve or deny"})
-		// 	return
-		// }
-		update := bson.M{"$set": bson.M{"status": status}}
-		_, err = leaveCollection.UpdateOne(ctx, bson.M{"leavetypeid": leaveId}, update)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{"Error": "Failed to update leave request"})
 			return
 		}
-		c.JSON(http.StatusOK, gin.H{"Message": "Leave request status updated successfully"})
-
+		objectID, err := primitive.ObjectIDFromHex(leaveID)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+			return
+		}
+		filter := bson.M{"_id": objectID}
+		update := bson.M{"$set": bson.M{"status": req.Status, "updatedat": time.Now()}}
+		_, err = leaveCollection.UpdateOne(context.TODO(), filter, update)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"Error": err})
+			return
+		}
+		c.JSON(http.StatusOK, gin.H{"message": "Leave status updated successfully!"})
 	}
 }
