@@ -23,14 +23,19 @@ const Login = () => {
         email,       
         password,
       });
-      const {token} = response.token
-      if(token){
-        localStorage.setItem('token',token)
-      }
-      // Handle successful login (e.g., save token, redirect)
+      const token = response.data.token;
+      if (token) {
+        localStorage.setItem('token', token); // Store the token in local storage
+        console.log('token:', token);
+        // Proceed with further logic, e.g., redirecting the user
+        } else {
+        console.error('Token not found in response');
+        }
       console.log(response.data);
     } catch (error) {
       // Handle error (e.g., display error message)
+      console.log(error)
+     //console.log(token); 
       setError('Login failed. Please check your email and password.');
     }
   };
