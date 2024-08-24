@@ -142,14 +142,15 @@ func UpdateLeaveStatus() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"Error": err})
 			return
 		}
-		objectID, err := primitive.ObjectIDFromHex(leaveID)
-		if err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
-			return
-		}
-		filter := bson.M{"_id": objectID}
+		// objectID, err := primitive.ObjectIDFromHex(leaveID)
+		// if err != nil {
+		// 	fmt.Println(objectID)
+		// 	c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid ID"})
+		// 	return
+		// }
+		filter := bson.M{"leavetypeid": leaveID}
 		update := bson.M{"$set": bson.M{"status": req.Status, "updatedat": time.Now()}}
-		_, err = leaveCollection.UpdateOne(context.TODO(), filter, update)
+		_, err := leaveCollection.UpdateOne(context.TODO(), filter, update)
 		if err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"Error": err})
 			return
