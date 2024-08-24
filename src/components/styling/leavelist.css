@@ -40,3 +40,38 @@ td {
     color: #666;
 }
 
+/* Styling for the approve button */
+.approve-btn {
+    border: 2px solid green;
+    background-color: transparent;
+    color: green;
+    padding: 10px 20px; /* Increase padding for larger button */
+    font-size: 16px; /* Increase font size */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+    margin: 5px;
+    transition: all 0.3s ease;
+}
+
+.approve-btn:hover {
+    background-color: green;
+    color: white;
+}
+
+/* Styling for the deny button */
+.deny-btn {
+    border: 2px solid red;
+    background-color: transparent;
+    color: red;
+    padding: 10px 20px; /* Increase padding for larger button */
+    font-size: 16px; /* Increase font size */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+}
+
+.deny-btn:hover {
+    background-color: red;
+    color: white;
+}

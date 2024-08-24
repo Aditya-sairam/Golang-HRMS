@@ -1,0 +1,34 @@
+.job-posting-list {
+    display:flex;
+    flex-wrap:wrap;
+    gap: 20px;
+    padding:20px
+}
+.job-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0);
+    padding : 20px;
+    width: 300px;
+    transition: box-shadow 0.3s;
+}
+.job-card:hover {
+    box-shadow:0 4px 8px rgba(0,0,0,0.2);
+    cursor: pointer;
+}
+.job-title {
+    font-size:1.5em; 
+    margin-bottom: 10px;
+}
+
+.job-username,
+.job-skills,
+.job-status,
+.job-dates {
+    margin-bottom: 10px;
+}
+.job-dates{
+    color: #555;
+    font-size:0.9em;
+}

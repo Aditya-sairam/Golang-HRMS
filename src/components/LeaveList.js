@@ -85,8 +85,8 @@ const LeaveList = () => {
             <td>{new Date(leave.createdat).toLocaleDateString()}</td>
             <td>{new Date(leave.updatedat).toLocaleDateString()}</td>
             <td>
-                <button onClick={() => handleStatusChange(leave._id,'Approved')}>Approve</button>
-                <button onClick={() => handleStatusChange(leave._id,'Denied')}>Denied</button>
+                <button className="approve-btn" onClick={() => handleStatusChange(leave.leavetypeid,'Approved')}>Approve</button>
+                <button className="deny-btn" onClick={() => handleStatusChange(leave.leavetypeid,'Denied')}>Deny</button>
 
             </td>
             
