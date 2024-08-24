@@ -31,6 +31,7 @@ const LeaveList = () => {
     //Code to handle leave approval/denial
     const handleStatusChange = async (id, newStatus) => {
         try {
+            console.log(typeof id)
             // Make an API call to update the status
             const token = localStorage.getItem('token');
             const response = await axios.put(
@@ -38,7 +39,7 @@ const LeaveList = () => {
                 { status: newStatus },
                 {
                     headers: {
-                        Authorization: `Bearer ${token}`,
+                        token: `${token}`,
                     },
                 }
             );
