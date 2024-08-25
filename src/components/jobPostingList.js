@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { GetJobData } from "../services/api";
 import "./styling/JobPostingList.css"; // Import the CSS file for styling
-import axios from "axios";
 import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 
 
@@ -25,7 +24,7 @@ function JobPostingList() {
     }, []);
 
     const handleCardClick = (jobId) => {
-        navigate(`/http://localhost:9000/recruitment/${jobId}`); // Navigate to the job details page
+        navigate(`/recruitment/${jobId}`); // Navigate to the job details page
     };
 
 
