@@ -7,7 +7,7 @@ import LeaveList from './components/LeaveList';
 import JobPostingList from './components/jobPostingList';
 import JobDetails from './components/jobDetailsPage';
 
-
+// Needs alanding page. ALso style it.
 function App() {
   return (
     <Router>
